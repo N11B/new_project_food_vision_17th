@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.vercel/
+public/ort/
+__pycache__/
+*.py[cod]
+.DS_Store

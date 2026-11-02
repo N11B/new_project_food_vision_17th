@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f1e7" />
+    <meta
+      name="description"
+      content="食鉴 AI：在浏览器本地运行 FoodVision Big 模型，识别 101 类食物。"
+    />
+    <title>食鉴 AI · 食物图像识别</title>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <div class="brand-mark" aria-hidden="true">食</div>
+        <div>
+          <p class="eyebrow">FOODVISION · ON-DEVICE AI</p>
+          <h1>食鉴 AI</h1>
+          <p class="hero-copy">上传一张食物照片，在浏览器中完成 101 类菜品识别。</p>
+        </div>
+        <div class="privacy-pill">图片不离开设备</div>
+      </header>
+
+      <section class="workspace" aria-label="食物图像识别">
+        <article class="panel input-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="step">01</span>
+              <h2>选择图片</h2>
+            </div>
+            <span class="file-hint">JPG · JPEG · PNG</span>
+          </div>
+
+          <div id="dropZone" class="drop-zone" tabindex="0" role="button">
+            <input id="fileInput" type="file" accept="image/jpeg,image/png" hidden />
+            <input
+              id="cameraInput"
+              type="file"
+              accept="image/*"
+              capture="environment"
+              hidden
+            />
+            <div id="emptyState" class="empty-state">
+              <div class="upload-icon" aria-hidden="true">↑</div>
+              <p class="drop-title">拖放图片到这里</p>
+              <p class="drop-subtitle">或从设备中选择一张清晰的食物照片</p>
+              <div class="input-actions">
+                <button id="chooseButton" class="button secondary" type="button">选择图片</button>
+                <button id="cameraButton" class="button ghost" type="button">拍摄照片</button>
+              </div>
+            </div>
+            <div id="previewState" class="preview-state" hidden>
+              <img id="previewImage" alt="待识别的食物图片" />
+              <button id="replaceButton" class="replace-button" type="button">更换图片</button>
+            </div>
+          </div>
+
+          <div class="model-status-row">
+            <span id="statusDot" class="status-dot loading"></span>
+            <span id="modelStatus">模型将在首次识别时加载</span>
+          </div>
+          <button id="predictButton" class="button primary wide" type="button" disabled>
+            <span id="predictButtonText">识别食物</span>
+            <span id="buttonSpinner" class="spinner" hidden></span>
+          </button>
+          <p id="errorMessage" class="error-message" role="alert" hidden></p>
+        </article>
+
+        <article class="panel result-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="step">02</span>
+              <h2>识别结果</h2>
+            </div>
+            <span id="inferenceMeta" class="file-hint">等待识别</span>
+          </div>
+
+          <div id="resultPlaceholder" class="result-placeholder">
+            <div class="plate" aria-hidden="true"><span></span></div>
+            <p>识别结果会显示在这里</p>
+            <small>首次加载约需下载 32 MB 模型</small>
+          </div>
+
+          <div id="resultContent" class="result-content" hidden>
+            <div class="top-result">
+              <p>最可能的类别</p>
+              <h3 id="topClass">—</h3>
+              <p id="topClassEnglish" class="top-class-english">—</p>
+              <div class="confidence-line">
+                <span>模型分数</span>
+                <strong id="topScore">—</strong>
+              </div>
+            </div>
+            <section class="nutrition-card" aria-labelledby="nutritionTitle">
+              <div class="nutrition-heading">
+                <div>
+                  <p id="nutritionTitle">该类食物每百克热量参考值</p>
+                  <strong><span id="nutritionTypical">—</span> kcal</strong>
+                </div>
+                <span id="nutritionRange" class="nutrition-range">—</span>
+              </div>
+              <div class="portion-calculator">
+                <label for="portionInput">估计重量</label>
+                <div class="portion-input-wrap">
+                  <input
+                    id="portionInput"
+                    type="number"
+                    inputmode="decimal"
+                    min="1"
+                    max="2000"
+                    step="10"
+                    value="100"
+                    aria-describedby="portionEstimate"
+                  />
+                  <span>g</span>
+                </div>
+                <output id="portionEstimate" for="portionInput">—</output>
+              </div>
+              <p class="nutrition-note">
+                类别级估算；照片不能判断真实重量、配方、酱料或用油量。仅供课程演示，不用于医疗或饮食决策。
+                <a href="https://fdc.nal.usda.gov/" target="_blank" rel="noreferrer">数据参考：USDA FoodData Central</a>
+              </p>
+            </section>
+            <div class="divider"></div>
+            <h4>Top 5 预测</h4>
+            <ol id="predictionList" class="prediction-list"></ol>
+            <p class="score-note">分数是模型输出的相对置信度，不等同于经校准的真实概率。</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="info-strip" aria-label="模型说明">
+        <div><strong>101</strong><span>Food-101 菜品类别</span></div>
+        <div><strong>本地</strong><span>WebAssembly 浏览器推理</span></div>
+        <div><strong>EfficientNet-B2</strong><span>FoodVision Big 模型</span></div>
+      </section>
+
+      <footer>
+        <p>适合课程演示与模型实验；非食物图片仍会被归入某个 Food-101 类别。</p>
+        <a href="https://huggingface.co/shalev396/foodvision-big" target="_blank" rel="noreferrer">
+          模型来源与许可
+        </a>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

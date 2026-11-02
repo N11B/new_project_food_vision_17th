@@ -1,0 +1,17 @@
+# 食鉴 AI 依赖清单（成员 A 整理）
+#
+# 版本建议（详见《A方向对接说明.md》）：
+# 1. 推荐：新环境请安装 torchvision >= 0.13（配合任意兼容的 torch 版本），
+#    官方 model.py 可原样加载，无需兼容层；
+# 2. 本机当前环境（torch 1.10.0+cu113 / torchvision 0.11.1）也能运行，
+#    统一入口会自动启用 model_service_torchvision_old.py 中的兼容层。
+# 3. torch/torchvision 不在此固定版本，避免 pip 重装覆盖已有的 CUDA 环境；
+#    新环境请先按 https://pytorch.org/get-started/locally/ 安装，再装以下其余依赖。
+
+torch
+torchvision
+
+streamlit==1.52.0
+Pillow==10.4.0
+huggingface_hub==0.26.2
+safetensors==0.4.5

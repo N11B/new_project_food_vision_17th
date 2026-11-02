@@ -1,0 +1,21 @@
+{
+  "name": "foodvision-ai-vercel",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "validate:data": "node scripts/validate-nutrition.mjs",
+    "build": "npm run validate:data && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "onnxruntime-web": "1.21.0"
+  },
+  "devDependencies": {
+    "vite": "6.4.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
