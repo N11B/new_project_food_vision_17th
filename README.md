@@ -58,8 +58,8 @@ npm run preview
 3. 导入该 GitHub 仓库。
 4. 当前 Git 仓库的网页工程位于 `代码` 子目录，因此将 **Root Directory** 设置为
    `代码`。如果以后把网页文件移动到仓库根目录，再改回仓库根目录即可。
-5. Vercel 会读取 `package.json` 和 `vercel.json`，执行 `npm run build`，并发布
-   `dist/`。
+5. Vercel 会读取 `package.json` 和 `vercel.json`，先执行 `npm ci`，再执行
+   `npm run build`，并发布 `dist/`。
 6. 以后向生产分支（通常为 `main`）推送提交，Vercel 会自动重新构建和发布。
 
 无需配置 Python、GPU、环境变量或 API 密钥。
@@ -75,6 +75,7 @@ npm run preview
 - `scripts/validate-nutrition.mjs`：构建前的数据完整性检查。
 - `DATA_SOURCES.md`：热量数据口径、计算方法和使用限制。
 - `vercel.json`：Vercel 构建输出及模型缓存策略。
+- `.vercelignore`：排除旧版 Python 后端、测试图片与报告材料，避免 Vercel 误判构建环境。
 - `export_onnx.py`：开发时从原 PyTorch 权重重新导出 ONNX；Vercel 不运行它。
 
 原来的 `app.py`、`model_service*.py`、`foodvision_big/` 和 `requirements.txt` 保留为

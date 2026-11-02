@@ -1,0 +1,11 @@
+# 旧版 Python/Streamlit 代码保留在 GitHub 中，但不参与 Vercel 静态前端部署。
+requirements.txt
+*.py
+__pycache__/
+foodvision_big/
+
+# 报告、测试与演示材料不需要进入生产部署包。
+screenshots/
+test_images/
+tests and results/
+
